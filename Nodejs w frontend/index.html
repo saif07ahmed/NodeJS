@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="searchVal">
+    <button onclick=search()>Submit</button>
+    <table id="tb" border="1" cellpadding="3" style="border-collapse: collapse; width: 100%;">
+        <tr>
+            <th onclick="sortTable(0)">Name</th>
+            <th onclick="sortTable(1)">gender</th>
+            <th onclick="sortTable(2)">age</th>
+            <th onclick="sorTable(3)">state</th>
+            <th onclick="sortTable(4)">country</th>
+        </tr>
+    </table>
+
+
+    <script>
+        let add_data = document.getElementById("add_data")
+        let page = 1
+        const results = 5
+
+        window.onscroll = function () {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                fetchData(page, results)
+            }
+        }
+        window.onload = fetchData(page, 100)
+        page += 1
+        function fetchData(pag, result) {
+            page += 1;
+            //fetch(`https://randomuser.me/api/?page=${pag}&results=${result}&seed=abc`)
+            fetch(`http://localhost:700/?page=${pag}&results=${result}&seed=abc`)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    createRow(data.results);
+                })
+                .catch(function (err) {
+                    console.log('error: ' + err);
+                });
+
+
+            function createRow(obj) {
+                //console.log(obj);
+                let mainTable = document.getElementById('tb');
+                for (let i in obj) {
+                    let table_header_row = document.createElement('tr');
+                    //console.log(i);
+                    let name = document.createElement("td");
+                    name.innerHTML = obj[i].name.first;
+                    table_header_row.appendChild(name);
+                    let gender = document.createElement("td");
+                    gender.innerHTML = obj[i].gender;
+                    table_header_row.appendChild(gender);
+                    let age = document.createElement("td");
+                    age.innerHTML = obj[i].dob.age;
+                    table_header_row.appendChild(age);
+                    let state = document.createElement("td");
+                    state.innerHTML = obj[i].location.state;
+                    table_header_row.appendChild(state);
+                    let country = document.createElement("td");
+                    country.innerHTML = obj[i].location.country;
+                    table_header_row.appendChild(country);
+                    tb.appendChild(table_header_row);
+                }
+            }
+
+
+
+        }
+
+        function search() {
+            var input, filter, table, tr, i, txtValue;
+            txtValue = ""
+            input = document.getElementById("searchVal");
+            //console.log(input.value)
+            filter = input.value.toLowerCase();
+            table = document.getElementById("tb");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                txtValue = ""
+                for (j = 0; j < 5; j++) {
+                    let td = tr[i].getElementsByTagName('td')[j]
+                    if (td) {
+                        txtValue += td.textContent || td.innerText;
+                    }
+                }
+
+                if (txtValue.toLowerCase().includes(filter)) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("tb");
+            switching = true;
+        
+            dir = "asc";
+        
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[n];
+                    y = rows[i + 1].getElementsByTagName("td")[n];
+                  
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                   
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body id="body">
+    <input id="searchInput" name="searchbar" onchange="fetchDat()" placeholder="Search...">
+    <nav><ul>
+        <li id="articles">Articles</li>
+        <li id="trends">Trends</li>
+        <li id="advice">Advice</li>
+        <li id="relationships">Relationships</li>
+    </ul></nav>
+    
+    <div id="main">
+        <section id="display" style="display :flex"></section>
+    </div>
+    </section>
+
+    <button id="showMore" onclick="showMore()">Show More</button>
+
+    <script src="indexJs.js"></script>
+</body>
+</html>
